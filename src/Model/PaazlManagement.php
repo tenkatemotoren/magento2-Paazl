@@ -233,7 +233,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'addition' => $streetParts['addition'],
                     'zipcode' => $shippingAddress->getPostcode(),
                     'city' => $shippingAddress->getCity(),
-                    'province' => $shippingAddress->getRegion(),
+                    'province' => $shippingAddress->getRegionCode(),
                     'country' => $shippingAddress->getCountryId()
                 ]
             ]

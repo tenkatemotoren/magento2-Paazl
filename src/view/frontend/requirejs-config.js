@@ -16,6 +16,9 @@ var config = {
             },
             'Magento_Checkout/js/view/shipping': {
                 'Paazl_Shipping/js/view/shipping-mixin': true
+            },
+            'Magento_Checkout/js/view/billing-address': {
+                'Paazl_Shipping/js/view/billing-address-mixin': true
             }
         }
     },

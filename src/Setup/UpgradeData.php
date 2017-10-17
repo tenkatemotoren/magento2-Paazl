@@ -209,6 +209,29 @@ class UpgradeData implements UpgradeDataInterface
             }
         }
 
+        if (version_compare($context->getVersion(), '1.3.4') < 0) {
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
+            $customerEntity = $customerSetup->getEavConfig()->getEntityType(
+                'customer_address'
+            );
+
+            foreach (['street_name', 'house_number', 'house_number_addition'] as $field) {
+                if ($this->isAttributeAllowedForImport($customerEntity, $field, true)) {
+                    $attribute = $customerSetup->getEavConfig()
+                        ->getAttribute(
+                            'customer_address',
+                            $field
+                        )
+                        ->addData(
+                            [
+                                'is_user_defined'   => true,
+                            ]
+                        );
+                    $attribute->save();
+                }
+            }
+        }
+
         $setup->endSetup();
     }
 

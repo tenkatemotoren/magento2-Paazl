@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2017 H&O E-commerce specialisten B.V. (http://www.h-o.nl/)
- * See LICENSE.txt for license details.
- */
-
 /*jshint browser:true jquery:true*/
 /*global alert*/
 define([
@@ -11,17 +6,17 @@ define([
 ], function ($, wrapper) {
     'use strict';
 
-    return function(shippingAction) {
+    return function(billingAction) {
         //if targetModule is a uiClass based object
-        return shippingAction.extend({
-            saveNewAddress:function()
+        return billingAction.extend({
+            updateAddress:function()
             {
                 var addressData;
                 var streetName = '';
                 var houseNumber = '';
                 var houseNumberAddition = '';
 
-                addressData = this.source.get('shippingAddress');
+                addressData = this.source.get(this.dataScopePrefix);
 
                 // fixup street
                 if (addressData.hasOwnProperty('custom_attributes') && addressData.custom_attributes !== undefined) {
@@ -37,7 +32,7 @@ define([
                     }
                 }
 
-                this.source.set('shippingAddress', addressData);
+                this.source.set(this.dataScopePrefix, addressData);
 
                 var result = this._super(); //call parent method
 
