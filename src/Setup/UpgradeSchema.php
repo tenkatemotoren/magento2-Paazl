@@ -51,14 +51,17 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '1.3.3', '<')) {
             $this->createNewAddressColumns($setup, 'sales_order_address', 'street_name', 'Street Name');
             $this->createNewAddressColumns($setup, 'quote_address', 'street_name', 'Street Name');
+            // @todo: remove these columns. It is being saved in customer_address_entity_varchar already
             $this->createNewAddressColumns($setup, 'customer_address_entity', 'street_name', 'Street Name');
 
             $this->createNewAddressColumns($setup, 'sales_order_address', 'house_number', 'House Number');
             $this->createNewAddressColumns($setup, 'quote_address', 'house_number', 'House Number');
+            // @todo: remove these columns. It is being saved in customer_address_entity_varchar already
             $this->createNewAddressColumns($setup, 'customer_address_entity', 'house_number', 'House Number');
 
             $this->createNewAddressColumns($setup, 'sales_order_address', 'house_number_addition', 'House Number Addition');
             $this->createNewAddressColumns($setup, 'quote_address', 'house_number_addition', 'House Number Addition');
+            // @todo: remove these columns. It is being saved in customer_address_entity_varchar already
             $this->createNewAddressColumns($setup, 'customer_address_entity', 'house_number_addition', 'House Number Addition');
         }
         $setup->endSetup();

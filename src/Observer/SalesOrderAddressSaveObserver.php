@@ -16,14 +16,22 @@ class SalesOrderAddressSaveObserver implements ObserverInterface
     protected $addressHelper;
 
     /**
+     * @var \Magento\Customer\Api\AddressRepositoryInterface
+     */
+    protected $addressRepository;
+
+    /**
      * CustomerAddressSaveObserver constructor.
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
+     * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
      */
     public function __construct(
-        \Paazl\Shipping\Helper\Utility\Address $addressHelper
+        \Paazl\Shipping\Helper\Utility\Address $addressHelper,
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
     )
     {
         $this->addressHelper = $addressHelper;
+        $this->addressRepository = $addressRepository;
     }
 
 
@@ -54,6 +62,15 @@ class SalesOrderAddressSaveObserver implements ObserverInterface
         $houseNumberFull = $streetParts['house_number'];
         if ($streetParts['addition'] != '') {
             $houseNumberFull .= ' ' . $streetParts['addition'];
+        }
+
+        // Check if this is a saved address, then use those values. $streetParts could be incorrect when the address has a comma in it.
+        if ($address->hasData('customer_address_id') && is_numeric($address->getCustomerAddressId())) {
+            $customerAddress = $this->addressRepository->getById($address->getCustomerAddressId());
+
+            $streetParts['street'] = $customerAddress->getCustomAttribute('street_name')->getValue();
+            $streetParts['house_number'] = $customerAddress->getCustomAttribute('house_number')->getValue();
+            $streetParts['addition'] = $customerAddress->getCustomAttribute('house_number_addition')->getValue();
         }
 
         // @todo: check if already has values for house_number, etc

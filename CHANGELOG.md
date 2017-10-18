@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.5]
+### Improvements / Bug fixes
+- Solve issue when a customer is logged in the address would not be saved when it including a comma. This address is now also correctly send to Paazl in the commit call.
+
 ## [1.3.4]
 ### Improvements / Bug fixes
 - Solve issue when RC versions were used. Due to several upgrade paths it could happen that extra address fields would not show in My Account page because of an incorrect setting to these attributes. This version will correct these attribute settings.
