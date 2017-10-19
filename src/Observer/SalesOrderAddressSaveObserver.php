@@ -82,10 +82,12 @@ class SalesOrderAddressSaveObserver implements ObserverInterface
         }
         // Load address directly. Address from observer event misses data.
         else {
-            $salesAddress = $this->salesAddressRepository->get($address->getEntityId());
-            $streetParts['street'] = $salesAddress->getStreetName();
-            $streetParts['house_number'] = $salesAddress->getHouseNumber();
-            $streetParts['addition'] = $salesAddress->getHouseNumberAddition();
+            if ($address->hasData('entity_id')) {
+                $salesAddress = $this->salesAddressRepository->get($address->getEntityId());
+                $streetParts['street'] = $salesAddress->getStreetName();
+                $streetParts['house_number'] = $salesAddress->getHouseNumber();
+                $streetParts['addition'] = $salesAddress->getHouseNumberAddition();
+            }
         }
 
         // @todo: check if already has values for house_number, etc

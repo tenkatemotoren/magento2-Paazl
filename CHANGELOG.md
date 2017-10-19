@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.7]
+### Improvements / Bug fixes
+- Previous release introduced an issue in which the order could not be created anymore.
+
 ## [1.3.6]
 ### Improvements / Bug fixes
 - Solve issue when an invoice was created based on an order that had an including a comma then the street would be empty.
-
 
 ## [1.3.5]
 ### Improvements / Bug fixes
