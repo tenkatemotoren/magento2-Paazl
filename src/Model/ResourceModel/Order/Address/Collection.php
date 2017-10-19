@@ -43,6 +43,10 @@ class Collection extends \Magento\Sales\Model\ResourceModel\Order\Address\Collec
      */
     protected function beforeAddLoadedItem(\Magento\Framework\DataObject $item)
     {
+        // Don't process addresses that already have street, house number, etc.
+        if ($item->hasData('house_number') && !is_null($item->getHouseNumber())) {
+            return $item;
+        }
         $convertedStreet = $this->addressHelper->getMultiLineStreetParts($item->getStreet());
         if (!$convertedStreet['house_number']) {
             $convertedStreet = $this->addressHelper->getStreetParts($item->getStreet());

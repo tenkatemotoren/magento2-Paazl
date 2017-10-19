@@ -21,17 +21,25 @@ class SalesOrderAddressSaveObserver implements ObserverInterface
     protected $addressRepository;
 
     /**
+     * @var \Magento\Sales\Api\OrderAddressRepositoryInterface
+     */
+    protected $salesAddressRepository;
+
+    /**
      * CustomerAddressSaveObserver constructor.
      * @param \Paazl\Shipping\Helper\Utility\Address $addressHelper
      * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
+     * @param \Magento\Sales\Api\OrderAddressRepositoryInterface  $salesAddressRepository
      */
     public function __construct(
         \Paazl\Shipping\Helper\Utility\Address $addressHelper,
-        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
+        \Magento\Sales\Api\OrderAddressRepositoryInterface $salesAddressRepository
     )
     {
         $this->addressHelper = $addressHelper;
         $this->addressRepository = $addressRepository;
+        $this->salesAddressRepository = $salesAddressRepository;
     }
 
 
@@ -71,6 +79,13 @@ class SalesOrderAddressSaveObserver implements ObserverInterface
             $streetParts['street'] = $customerAddress->getCustomAttribute('street_name')->getValue();
             $streetParts['house_number'] = $customerAddress->getCustomAttribute('house_number')->getValue();
             $streetParts['addition'] = $customerAddress->getCustomAttribute('house_number_addition')->getValue();
+        }
+        // Load address directly. Address from observer event misses data.
+        else {
+            $salesAddress = $this->salesAddressRepository->get($address->getEntityId());
+            $streetParts['street'] = $salesAddress->getStreetName();
+            $streetParts['house_number'] = $salesAddress->getHouseNumber();
+            $streetParts['addition'] = $salesAddress->getHouseNumberAddition();
         }
 
         // @todo: check if already has values for house_number, etc
