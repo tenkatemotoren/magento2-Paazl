@@ -6,11 +6,15 @@
 
 namespace Paazl\Shipping\Setup;
 
-use Paazl\Shipping\Setup\PaazlSetup;
-use Paazl\Shipping\Setup\PaazlSetupFactory;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Paazl\Shipping\Setup\PaazlSetupFactory;
+use Magento\Customer\Setup\CustomerSetupFactory;
+use Magento\Eav\Model\Entity\Attribute\SetFactory;
+use Magento\Eav\Api\AttributeRepositoryInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Zend\Serializer\Adapter\Json;
 
 /**
  * @codeCoverageIgnore
@@ -32,7 +36,7 @@ class InstallData implements InstallDataInterface
     protected $customerSetupFactory;
 
     /**
-     * @var \Magento\Eav\Model\Entity\Attribute\SetFactory
+     * @var SetFactory
      */
     protected $attributeSetFactory;
 
@@ -42,26 +46,40 @@ class InstallData implements InstallDataInterface
     protected $attributeRepository;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     protected $scopeConfig;
 
     /**
-     * Init
-     *
-     * @param PaazlSetupFactory $eavSetupFactory
+     * @var Json
      */
-    public function __construct(PaazlSetupFactory $eavSetupFactory,
-\Magento\Customer\Setup\CustomerSetupFactory $customerSetupFactory,
-\Magento\Eav\Model\Entity\Attribute\SetFactory $attributeSetFactory,
-\Magento\Eav\Api\AttributeRepositoryInterface $attributeRepository,
-\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
+    protected $json;
+
+    /**
+     * InstallData constructor.
+     *
+     * @param \Paazl\Shipping\Setup\PaazlSetupFactory $eavSetupFactory
+     * @param CustomerSetupFactory                    $customerSetupFactory
+     * @param SetFactory                              $attributeSetFactory
+     * @param AttributeRepositoryInterface            $attributeRepository
+     * @param ScopeConfigInterface                    $scopeConfig
+     * @param Json                                    $json
+     */
+    public function __construct(
+        PaazlSetupFactory $eavSetupFactory,
+        CustomerSetupFactory $customerSetupFactory,
+        SetFactory $attributeSetFactory,
+        AttributeRepositoryInterface $attributeRepository,
+        ScopeConfigInterface $scopeConfig,
+        Json $json
+    )
     {
         $this->eavSetupFactory = $eavSetupFactory;
         $this->customerSetupFactory = $customerSetupFactory;
         $this->attributeSetFactory = $attributeSetFactory;
         $this->attributeRepository = $attributeRepository;
         $this->scopeConfig = $scopeConfig;
+        $this->json = $json;
     }
 
     /**
@@ -233,7 +251,7 @@ class InstallData implements InstallDataInterface
                     )
                     ->addData(
                         [
-                            'validate_rules'   => serialize([
+                            'validate_rules'   => $this->json->serialize([
                                 'input_validation' => 'numeric',
                             ]),
                         ]
