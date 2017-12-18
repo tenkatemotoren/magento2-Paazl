@@ -51,11 +51,6 @@ class InstallData implements InstallDataInterface
     protected $scopeConfig;
 
     /**
-     * @var Json
-     */
-    protected $json;
-
-    /**
      * InstallData constructor.
      *
      * @param \Paazl\Shipping\Setup\PaazlSetupFactory $eavSetupFactory
@@ -63,15 +58,13 @@ class InstallData implements InstallDataInterface
      * @param SetFactory                              $attributeSetFactory
      * @param AttributeRepositoryInterface            $attributeRepository
      * @param ScopeConfigInterface                    $scopeConfig
-     * @param Json                                    $json
      */
     public function __construct(
         PaazlSetupFactory $eavSetupFactory,
         CustomerSetupFactory $customerSetupFactory,
         SetFactory $attributeSetFactory,
         AttributeRepositoryInterface $attributeRepository,
-        ScopeConfigInterface $scopeConfig,
-        Json $json
+        ScopeConfigInterface $scopeConfig
     )
     {
         $this->eavSetupFactory = $eavSetupFactory;
@@ -79,7 +72,6 @@ class InstallData implements InstallDataInterface
         $this->attributeSetFactory = $attributeSetFactory;
         $this->attributeRepository = $attributeRepository;
         $this->scopeConfig = $scopeConfig;
-        $this->json = $json;
     }
 
     /**
@@ -251,7 +243,7 @@ class InstallData implements InstallDataInterface
                     )
                     ->addData(
                         [
-                            'validate_rules'   => $this->json->serialize([
+                            'validate_rules'   => serialize([
                                 'input_validation' => 'numeric',
                             ]),
                         ]

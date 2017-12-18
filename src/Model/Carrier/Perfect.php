@@ -326,19 +326,12 @@ class Perfect extends \Paazl\Shipping\Model\Carrier
         // Sort by price
         uasort($methods, ["\Paazl\Shipping\Model\Carrier\Perfect", "cmp"]);
 
-        $key = key($methods);
-
-        if ($key == 'SERVICE_POINT' && next($methods) !== false) {
-            next($methods);
-            $key = key($methods);
-        }
-
-        $data = [
-            'delivery' => $methods[$key],
-        ];
-
-        if (isset($methods['SERVICE_POINT'])) {
-            $data['servicepoint'] = $methods['SERVICE_POINT'];
+        foreach ($methods as $key => $method) {
+            if($key == 'SERVICE_POINT') {
+                $data['servicepoint'] = $method;
+            } else {
+                $data['delivery'] = $method;
+            }
         }
 
         return $data;

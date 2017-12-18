@@ -7,6 +7,9 @@
 
 namespace Paazl\Shipping\Model;
 
+use function get_class;
+use function is_object;
+
 class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
 {
 
@@ -137,7 +140,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             'countryOfManufacture' => 'country_of_manufacture',
             'unitPrice' => 'price_incl_tax',
             'hsTariffCode' => 'hsTariffCode',
-            'processingDays' => 'processingDays'
+            'processingDays' => 'processingDays',
         ];
 
         return $attributes;
@@ -241,9 +244,9 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'zipcode' => $shippingAddress->getPostcode(),
                     'city' => $shippingAddress->getCity(),
                     'province' => $shippingAddress->getRegionCode(),
-                    'country' => $shippingAddress->getCountryId()
-                ]
-            ]
+                    'country' => $shippingAddress->getCountryId(),
+                ],
+            ],
         ];
 
         $zipcodeValidation = $this->_scopeConfig->isSetFlag(self::XML_PATH_STORECONFIGURATION_PAAZL_API_ZIPCODE_VALIDATION, \Magento\Store\Model\ScopeInterface ::SCOPE_STORE, $order->getStoreId());
@@ -293,7 +296,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             'context' => $dateTime->format('Ymd'),
             'body' => [
                 'changedSince' => $dateTime->format('Y-m-d'),
-            ]
+            ],
         ];
         $listOrdersRequest = $this->_requestBuilder->build('PaazlListOrdersRequest', $requestData);
         $response = $this->_requestManager->doRequest($listOrdersRequest)->getResponse();
@@ -320,8 +323,8 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             'context' => $this->_getQuoteId(),
             'body' => [
                 'orderReference' => $this->_getQuoteId(),
-                'products' => $products
-            ]
+                'products' => $products,
+            ],
         ];
 
         if ($this->_paazlData['orderReference'] != $this->_getQuoteId()) {
@@ -351,7 +354,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                         'orderReference' => $this->_getQuoteId(),
                         'zipcode' => $dutchPostcode,
                         'housenumber' => $addressData['house_number'],
-                        'addition' => $addressData['house_number_addition']
+                        'addition' => $addressData['house_number_addition'],
                     ],
                 ];
                 $identifier = $addressData['postcode']
@@ -375,7 +378,7 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
                     'shippingOption' => null,
                     'deliveryDateRange' => null,
                     'deliveryEstimate' => true,
-                ]
+                ],
             ];
             $shippingOptionRequest = $this->_requestBuilder->build('PaazlShippingOptionRequest', $data);
             $this->_shippingOptionKey = $shippingOptionRequest->getRequestKey();
@@ -402,22 +405,36 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
      */
     protected function _getAddressData($request)
     {
+        /** @var \Magento\Quote\Model\Quote\Address\RateRequest $request */
+        /* @var $item \Magento\Quote\Model\Quote\Item */
         foreach ($request->getAllItems() as $item) {
             $houseNumber = '';
+            /** @var \Magento\Quote\Model\Quote\Address $address */
             $address = $item->getAddress();
             $extensionAttributes = $address->getExtensionAttributes();
 
             $addressExtension = $extensionAttributes
-                ? $extensionAttributes
-                : $this->addressExtensionFactory->create();
+                ?: $this->addressExtensionFactory->create();
 
             if (!is_null($extensionAttributes)) {
-                $streetName = $extensionAttributes->getStreetName();
-                $houseNumber = $extensionAttributes->getHouseNumber();
-                $addition = $extensionAttributes->getHouseNumberAddition();
+                if (is_object($extensionAttributes)) {
+                    $streetName = $extensionAttributes->getStreetName();
+                    $houseNumber = $extensionAttributes->getHouseNumber();
+                    $addition = $extensionAttributes->getHouseNumberAddition();
+                } else if (is_array($extensionAttributes)) {
+                    if (!empty($extensionAttributes['checkout_fields'])) {
+                        print_r($extensionAttributes);
+                        $streetName = $extensionAttributes['street_name'];
+                        $houseNumber = $extensionAttributes['house_number'];
+                        $addition = null;
+                        if (isset($extensionAttributes['house_number_addition'])) {
+                            $addition = $extensionAttributes['house_number_addition'];
+                        }
+                    }
+                }
             }
             // Try to get information from address?
-            if ($houseNumber == '') {
+            if ($houseNumber == '' && is_object($extensionAttributes)) {
                 if ($address->getHouseNumber() != '') {
                     $streetName = $address->getStreetName();
                     $houseNumber = $address->getHouseNumber();
