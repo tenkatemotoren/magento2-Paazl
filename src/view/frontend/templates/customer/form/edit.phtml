@@ -137,9 +137,10 @@
         },  
         "*": {
             "Paazl_Shipping/validation": {
-                "ignore": <?php /* @escapeNotVerified */ echo ($_dob->isEnabled() || $userDefinedAttributes->hasUserDefinedAttributes()) | 'null'; ?>,
-                "hasUserDefinedAttributes": <?php /* @escapeNotVerified */ echo $userDefinedAttributes->hasUserDefinedAttributes() | 'null'; ?>,
-                "isDobEnabled": <?php /* @escapeNotVerified */ echo $_dob->isEnabled() | 'null'; ?>,
+                "ignore": <?php /* @escapeNotVerified */ echo (($_dob->isEnabled() || $customerAttributes->hasUserDefinedAttributes()) ?: 'null'); ?>,
+                "hasUserDefinedAttributes": <?php /* @escapeNotVerified */ echo ($customerAttributes->hasUserDefinedAttributes() ?: 'null'); ?>,
+                "isDobEnabled": <?php /* @escapeNotVerified */ echo ($_dob->isEnabled() ?: 'null'); ?>,
+                "disableAutoComplete": true,
                 "mixins": [
                     "Paazl_Shipping/error-placement",
                     "Paazl_Shipping/validation-ignore"
