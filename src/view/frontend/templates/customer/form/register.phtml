@@ -19,6 +19,8 @@
 <?php echo $block->getChildHtml('customer.form.register.extra')?>
 <form class="form create account form-create-account" action="<?php /* @escapeNotVerified */ echo $block->getPostActionUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data" autocomplete="off">
     <?php /* @noEscape */ echo $block->getChildHtml('form_fields_before_in_form')?>
+    <?php echo /* @noEscape */ $block->getBlockHtml('formkey'); ?>
+
     <fieldset class="fieldset create info">
         <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Personal Information') ?></span></legend><br>
         <input type="hidden" name="success_url" value="<?php /* @escapeNotVerified */ echo $block->getSuccessUrl() ?>"/>
