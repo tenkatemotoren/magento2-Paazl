@@ -273,6 +273,9 @@ class PaazlManagement implements \Paazl\Shipping\Api\PaazlManagementInterface
             else {
                 $requestData['body']['shippingMethod']['servicepointNotificationMobile'] = $notification;
             }
+        } else {
+            $requestData['body']['shippingMethod']['servicepointNotificationMobile'] = $requestData['body']['customerPhoneNumber'];
+            $requestData['body']['shippingMethod']['servicepointNotificationEamil'] = $requestData['body']['customerEmail'];
         }
 
         // Preferred delivery date
