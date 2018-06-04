@@ -243,7 +243,7 @@ class InstallData implements InstallDataInterface
                     )
                     ->addData(
                         [
-                            'validate_rules'   => serialize([
+                            'validate_rules'   => json_encode([ 
                                 'input_validation' => 'numeric',
                             ]),
                         ]
