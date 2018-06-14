@@ -24,6 +24,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
 {
     /** Paazl carrier code */
     const CODE = 'paazl';
+    const XML_PATH_PAAZLP_ACTIVE = 'carriers/paazlp/active';
 
     /** @var RateRequest */
     protected $_request;
@@ -474,7 +475,10 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      */
     public function hasAccessToPaazlPerfect()
     {
-        if (!isset($this->accessToPaazlPerfect)) {
+        if (!$this->_scopeConfig->getValue(self::XML_PATH_PAAZLP_ACTIVE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+			return false;
+		}
+        elseif (!isset($this->accessToPaazlPerfect)) {
             $this->accessToPaazlPerfect = true;
 
             // Check if has access to Paazl Perfect
