@@ -110,7 +110,7 @@ class ShippingMethodConverterPlugin
             $shippingOptions = $this->_paazlManagement->getShippingOptions();
 
             foreach($shippingOptions as $shippingOption) {
-                if ($shippingOption['type'] == $result->getMethodCode() && isset($shippingOption['deliveryDates'])) {
+                if ($shippingOption['type'] == $result->getMethodCode() && isset($shippingOption['deliveryDates']) && sizeof($shippingOption['deliveryDates']) > 0 ) {
                     $firstShippingOption = $shippingOption['deliveryDates']['deliveryDateOption'][0];
                     $dateTime = $firstShippingOption['deliveryDate'];
                     $dateAsTimeZone = $this->timezoneInterface
