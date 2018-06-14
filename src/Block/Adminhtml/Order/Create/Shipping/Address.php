@@ -147,7 +147,7 @@ class Address extends \Magento\Sales\Block\Adminhtml\Order\Create\Shipping\Addre
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $countryElement
      * @return void
      */
-    private function processCountryOptions(\Magento\Framework\Data\Form\Element\AbstractElement $countryElement)
+    protected function processCountryOptions(\Magento\Framework\Data\Form\Element\AbstractElement $countryElement)
     {
         $storeId = $this->getBackendQuoteSession()->getStoreId();
         $options = $this->getCountriesCollection()
