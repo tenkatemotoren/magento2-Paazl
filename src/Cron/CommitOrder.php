@@ -107,7 +107,7 @@ class CommitOrder
 
                 if (strpos('error-', $order->getExtOrderId() !== false)) continue;
 
-                $extOrderId = $this->_paazlManagement->getReferencePrefix() . $order->getQuoteId();
+                $extOrderId = $this->_paazlManagement->getReferencePrefix() . $order->getIncrementId();
 
                 $response = $this->_paazlManagement->processOrderCommitRequest($order);
                 if (isset($response['succes'])) {
